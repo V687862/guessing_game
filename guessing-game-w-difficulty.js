@@ -66,27 +66,24 @@ let askGuess = () => {
   });
 }
 
-
-
 function randomInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-let askRange = () => {
-  r1.question("Enter a Minimum Number: ", min => {
-    r1.question("Enter Maximum Number: ", max => {
-      min = Number(min);
-      max = Number(max);
-      console.log(`I'm thinking of a number between ${min} and ${max}...`);
-      secretNumber = randomInRange(Number(min), Number(max));
+let askDifficulty = () => {
+  r1.question("Choose a difficulty (easy, medium, hard): ", difficulty => {
+    difficulty = difficulty.toLowerCase();
+    if (difficulties[difficulty]) {
+      let chosenDifficulty = difficulties[difficulty];
+      numAttempts = chosenDifficulty.attempts;
+      secretNumber = randomInRange(chosenDifficulty.range.min, chosenDifficulty.range.max);
+      console.log(`I'm thinking of a number between ${chosenDifficulty.range.min} and ${chosenDifficulty.range.max}...`);
       askGuess();
-    });
+    } else {
+      console.log("Invalid difficulty choice. Please choose between easy, medium, or hard.");
+      askDifficulty();
+    }
   });
 };
-let askLimit = () => {
-  r1.question("Enter the number of attempts you'd like: ", attempts => {
-    numAttempts = Number(attempts);
-    askRange();
-  });
-}
-askLimit();
+
+askDifficulty();
